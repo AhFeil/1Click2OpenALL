@@ -1,13 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>一键全开</title>
+    <title>OneClickOpen</title>
+    <style>
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+    </style>
+    <script type="text/javascript">
+        function submitForm() {
+            var websites = document.getElementById('websites').value.trim();
+
+            // 如果网址为空，则不提交表单
+            if (websites === '') {
+                return false;
+            }
+        }
+    </script>
 </head>
 <body>
-    <h1>一键全开</h1>
-    <form action="/open_websites" method="post">
-        <textarea name="websites" rows="10" cols="30" placeholder="在此输入网址，每行一个"></textarea><br>
-        <input type="submit" value="一键全开">
-    </form>
+    <div class="container">
+        <h1>Welcome to Use OneClickOpen!</h1>
+        <p>Enter the websites you want to open:</p>
+        <form action="/open_websites" method="post" onsubmit="return submitForm()">
+            <textarea id="websites" name="websites" rows="10" cols="50" placeholder="在此输入网址，每行一个"></textarea><br><br>
+            <button type="submit">Open Websites</button>
+        </form>
+    </div>
 </body>
 </html>
