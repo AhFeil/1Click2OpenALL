@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>打开网页</title>
+    <script type="text/javascript">
+        function openWebsites() {
+            var websites = {{ websites|tojson }};
+            for (var i = 0; i < websites.length; i++) {
+                window.open(websites[i], '_blank');
+            }
+
+            setTimeout(function(){
+                window.location.href = "/"; // 跳转回主页
+            }, 1000); // 2秒后跳转
+        }
+    </script>
+</head>
+<body onload="openWebsites()">
+</body>
+</html>
