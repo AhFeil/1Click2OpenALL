@@ -30,5 +30,17 @@
             <button type="submit">Open Websites</button>
         </form>
     </div>
+
+    <!-- 显示上一次输入的网址 -->
+    {% if websites %}
+    <div class="container">
+        <h2>Last Entered Websites:</h2>
+        <ul>
+            {% for website in websites %}
+            <li>{{ website }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
 </body>
 </html>
