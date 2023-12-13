@@ -21,6 +21,12 @@ def index():
     return render_template('index.html', websites=websites)
 
 
+@app.route('/acquire_pop_up')
+def acquire_pop_up():
+    """获取弹窗权限"""
+    return render_template('acquire_pop_up.html')
+
+
 @app.route('/open_websites', methods=['POST'])
 def open_websites():
     website_content = request.form.get('websites')  # 获取表单中的文本
