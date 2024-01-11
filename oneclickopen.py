@@ -8,6 +8,16 @@ def extract_urls(text):
     urls = re.findall(pattern, text)  # 在文本中查找所有匹配的网址
     return urls
 
+# 定义一个函数，用于判断输入的字符串是否是合法的网址
+def is_valid_url(input_string):
+    url_pattern = r'^(https?:\/\/)?[^.\s]+(\.[^.\s]+)+[^\s]$'
+    ip_address_pattern = r'\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b'
+
+    if re.match(url_pattern, input_string) or re.match(ip_address_pattern, input_string):
+        return True
+    else:
+        return False
+
 
 app = Flask(__name__)
 
@@ -36,16 +46,18 @@ def open_websites():
     
     # 处理网址，
     for i in range(len(website_content_list)):
+        one_line = website_content_list[i]
         # 如果是 md 格式，则可以提取出网址链接
-        url_list = extract_urls(website_content_list[i])
+        url_list = extract_urls(one_line)
         if url_list:
             website_list.extend(url_list)
-        else:
-            # 若不匹配 md，则认为是纯网址，确保它们是完整的URL
-            parsed_url = urlparse(website_content_list[i])
+        elif is_valid_url(one_line):   # 若不匹配 md，检查是否是单个 URL
+            parsed_url = urlparse(one_line)
             if not parsed_url.scheme:
-                website_content_list[i] = "http://" + website_content_list[i]
-            website_list.append(website_content_list[i])
+                one_line = "http://" + one_line
+            website_list.append(one_line)
+        else:
+            pass
 
     # 更新会话中的网址列表
     session['websites'] = website_list
@@ -54,4 +66,9 @@ def open_websites():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', port=5000)
+    # 测试用
+    # if is_valid_url("baidu.com"):
+    #     print("URL 匹配成功!")
+    # else:
+    #     print("URL 不匹配")
