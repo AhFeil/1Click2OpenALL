@@ -2,6 +2,8 @@
 
 **一键全开**输入框中的网址。
 
+体验网址： http://oneclickopen.vfly2.com/
+
 
 测试通过的浏览器：
 - Windows： Edge、Chrome、Firefox、Vivaldi
