@@ -4,6 +4,7 @@
 
 体验网址： http://oneclickopen.vfly2.com/
 
+![](https://ib.ahfei.blog:443/imagesbed/1Click2OpenALL-show-how-24-03-27.webp)
 
 测试通过的浏览器：
 - Windows： Edge、Chrome、Firefox、Vivaldi
@@ -18,7 +19,7 @@
 export 1Click2OpenALL_SECRET="your_secrec_key"
 ```
 
-安装步骤： **待写**
+[一键全开 1Click2OpenALL 的安装步骤 - 技焉洲 (vfly2.com)](https://technique.vfly2.com/2024/03/deployment-process-1click2openall/)
 
 
 ## 使用
@@ -35,7 +36,7 @@ export 1Click2OpenALL_SECRET="your_secrec_key"
 1. 一行含有网址的 md 格式文本，会提取其中所有网址
 2. 使用正则寻找匹配 http://xx.xx/xxx 和 https://xx.xx/xxx 这种格式的字符串
 3. 一行一个纯网址，可以省略 http://、https:// ，如果是中文域名则抛弃
-4. 一行是空则抛弃
+4. 忽略空行
 
 ---
 
