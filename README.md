@@ -1,68 +1,84 @@
-# oneclickopen
+# 1Click2OpenALL
 
-一键全开网址
-
-
-
-## 改进
+**一键全开**输入框中的网址。
 
 
+测试通过的浏览器：
+- Windows： Edge、Chrome、Firefox、Vivaldi
+- Android： Samsung Browser、
 
 
+## 管理员
 
-## 功能
+可以自定义加密 session 的密钥，通过添加环境变量实现
 
-1. 一行一个网址，可以省略 http://、https://
-2. 一行可以是一段含有网址的 md 格式文本，
-3. md 格式和纯网址可以一起复制进去，只要一行一种就行
-4. 如果某一行既不是单纯的网址，也不包含 md 格式的网址，会被丢弃
+```sh
+export 1Click2OpenALL_SECRET="your_secrec_key"
+```
+
+安装步骤： **待写**
 
 
+## 使用
 
+> **第一次使用**，点击“获取弹窗权限”的那个链接，然后允许弹窗
+
+把含有网址的内容粘贴进输入框，然后点 Open Websites 即可。
+
+
+### 支持的格式
+
+
+每次检测一行。下面是按照匹配顺序列出的：
+1. 一行含有网址的 md 格式文本，会提取其中所有网址
+2. 使用正则寻找匹配 http://xx.xx/xxx 和 https://xx.xx/xxx 这种格式的字符串
+3. 一行一个纯网址，可以省略 http://、https:// ，如果是中文域名则抛弃
+4. 一行是空则抛弃
+
+---
+
+推荐使用，一行是一个纯网址或者是 md 格式含有网址的
 
 ```
 baidu.com
-google.com
-```
-
-
-```
-官网： [库苏恩 (spiritlhl.net)](https://www.spiritlhl.net/)，还有 [学好kvm，从图形化到命令 (zsythink.net)](https://www.zsythink.net/archives/category/%e8%bf%90%e7%bb%b4%e7%9b%b8%e5%85%b3/kernel-based-virtual-machine)  hE：玩玩 PVE
-google.com
-```
-
-```
-[VikParuchuri/marker: Convert PDF to markdown quickly with high accuracy (github.com)](https://github.com/VikParuchuri/marker)
-baidu.com
-[astral-sh/ruff: An extremely fast Python linter and code formatter, written in Rust. (github.com)](https://github.com/astral-sh/ruff)
-google.com
-[Articles about Software Engineering, AI, DevOps, Cloud and more (ataiva.com)](https://ataiva.com/)
-```
-
-```
-www.baidu.com
-
-http://154.204.60.26:8002/
-
-[承飞之咎 - Explore, Make Friends and Live Independently (vfly2.com)](https://blog.vfly2.com/)
-
+blog.vfly2.com
 https://blog.vfly2.com/
+```
+
+
+```
+[承飞之咎 - Explore, Make Friends and Live Independently (vfly2.com)](https://blog.vfly2.com/) 和 [技焉洲 - Linux，单片机，编程 (vfly2.com)](https://technique.vfly2.com/)
+```
+
+
+使用正则匹配
+
+```
+- Rime输入法词库扩充：https://zhuanlan.zhihu.com/p/471412208
+https://blog.vfly2.com/  一些文字
+```
+
+不同行可以是不同格式的
+
+
+```
+https://blog.vfly2.com/
+
+baidu.com
 
 [提供 AhFei 的 自建服务 - Emby, Bitwarden, and more - 承飞之咎 (vfly2.com)](https://blog.vfly2.com/2024/01/provide-ahfeis-self-hosted-services-emby-bitwarden-and-more/)
 
-https://blog.vfly2.com/2024/01/provide-ahfeis-self-hosted-services-emby-bitwarden-and-more/
+以下是我在寻找 vscode 文章时发现的： 
+上面这种原本应该匹配的一行一个网址，但是中文域名太少用，而且中间夹杂一段无网址的文本也很常见，于是抛弃中文域名以避免这种情况
 
-以下是我在寻找 vscode 文章时发现的*不*相关阅读：
-
-[全栈工程师为什么越混越困难，看这篇就够了](https://blog.csdn.net/huaxiangchen/article/details/106050664)
+- Rime输入法词库扩充：https://zhuanlan.zhihu.com/p/471412208
 ```
 
+---
 
-这种会被丢弃，即使其中有网址
+*会出错的*
 
 ```
-以下是我在寻找 vscode 文章时发现的*不*相关阅读：
-
-全栈工程师为什么越混越困难，看这篇就够了： https://blog.csdn.net/huaxiangchen/article/details/106050664
+https://blog.vfly2.com/一些文字
+这种中间无空格的，会把后面的文字也当作网址一部分
 ```
-

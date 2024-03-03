@@ -9,6 +9,14 @@
             padding: 20px;
             text-align: center;
         }
+        .subtitle {
+            text-align: center;
+            font-size: 12px;
+        }
+        .divider {
+            border-top: 1px dashed #000;
+            margin: 20px 0;
+        }
     </style>
     <script type="text/javascript">
         function submitForm() {
@@ -23,11 +31,15 @@
 </head>
 <body>
     <div class="container">
-        <h1>Welcome to Use OneClickOpen!</h1>
-        <a href="/acquire_pop_up">IF First use, then click me to Acquire Pop Up</a>
+        <h1>Welcome to Use 1Click2OpenALL!</h1>
+        <p class="subtitle">by AhFei</p>
+        <p class="subtitle">GitHub: <a href="https://github.com/ahfeil/1Click2OpenALL">https://github.com/ahfeil/1Click2OpenALL</a></p>
+        <div class="divider"></div>
+
+        <a href="/acquire_pop_up">{{ message_of_pop_up }}</a>
         <p>Enter the websites you want to open:</p>
         <form action="/open_websites" method="post" onsubmit="return submitForm()">
-            <textarea id="websites" name="websites" rows="10" cols="50" placeholder="在此输入网址，每行一个"></textarea><br><br>
+            <textarea id="websites" name="websites" rows="15" cols="70" placeholder="在此输入网址，每行一个"></textarea><br><br>
             <button type="submit">Open Websites</button>
         </form>
     </div>
