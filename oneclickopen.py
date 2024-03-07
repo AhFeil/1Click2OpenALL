@@ -27,7 +27,7 @@ def is_chinese_char(char):
 app = Flask(__name__)
 
 # 设置应用的密钥，用于会话数据加密，复杂随机即可，实际生产环境需要从外面引入
-app.secret_key = os.environ.get('1Click2OpenALL_SECRET', 'dwSR3bXYXcL^G!NiGV')
+app.secret_key = os.environ.get('oneClick2OpenALL_SECRET', 'dwSR3bXYXcL^G!NiGV')
 
 
 @app.route('/')
