@@ -2,9 +2,10 @@
 <html>
 <head>
     <title>获取弹窗权限</title>
+    {{ track_js_codes | safe}}
     <script type="text/javascript">
         function openWebsites() {
-            var websites = ["https://blog.vfly2.com"];
+            var websites = ["https://goto.vfly2.com/1c2o"];
             for (var i = 0; i < websites.length; i++) {
                 window.open(websites[i], '_blank');
             }
@@ -15,6 +16,8 @@
         }
     </script>
 </head>
+<h1>Welcome to Use 1Click2OpenALL!</h1>
+<p>授权后，超过一定时间会跳转到作者的网站，可以主动后退到首页以避免</p>
 <body onload="openWebsites()">
 </body>
 </html>

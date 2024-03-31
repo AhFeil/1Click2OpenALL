@@ -19,6 +19,8 @@
 export 1Click2OpenALL_SECRET="your_secrec_key"
 ```
 
+可以定义跟踪代码，只需将代码放入 `templates/track.txt`，这里的代码将会插入到网页的 head 内。
+
 安装步骤： [一键全开 1Click2OpenALL 的安装步骤 - 技焉洲 (vfly2.com)](https://technique.vfly2.com/2024/03/deployment-process-1click2openall/)
 
 

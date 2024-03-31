@@ -3,6 +3,14 @@ import re
 
 from flask import Flask, render_template, request, session
 
+# 自定义跟踪代码
+track_js_codes_file = "templates/track.txt"
+if os.path.exists(track_js_codes_file):
+    with open(track_js_codes_file, 'r', encoding='utf-8') as f:
+        track_js_codes = f.read()
+else:
+    track_js_codes = ""
+
 
 def extract_urls_from_md(text):
     # 提取 md 中的网址
@@ -41,13 +49,13 @@ def index():
         message = "IF First use, then click me to Acquire Pop Up"
     # 获取会话中的网址列表
     websites = session.get('websites', [])
-    return render_template('index.html', websites=websites, message_of_pop_up=message)
+    return render_template('index.html', websites=websites, message_of_pop_up=message, track_js_codes=track_js_codes)
 
 
 @app.route('/acquire_pop_up')
 def acquire_pop_up():
     """获取弹窗权限"""
-    return render_template('acquire_pop_up.html')
+    return render_template('acquire_pop_up.html', track_js_codes=track_js_codes)
 
 
 @app.route('/open_websites', methods=['POST'])
