@@ -1,7 +1,7 @@
 import os
 import re
 
-from flask import Flask, render_template, request, session
+from flask import Flask, send_from_directory, render_template, request, session
 
 # 自定义跟踪代码
 track_js_codes_file = "templates/track.txt"
@@ -88,6 +88,13 @@ def open_websites():
     session['websites'] = link_list
 
     return render_template('open_websites.html', websites=link_list)
+
+
+@app.route('/robots.txt')
+@app.route('/sitemap.xml')
+def static_from_root():
+    return send_from_directory("./templates", request.path[1:])
+
 
 
 if __name__ == '__main__':
