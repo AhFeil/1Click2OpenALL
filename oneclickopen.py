@@ -43,7 +43,8 @@ app = FastAPI()
 templates = Jinja2Templates(directory='templates')
 
 # 设置应用的密钥，用于会话数据加密，复杂随机即可，实际生产环境需要从外面引入
-# app.secret_key = os.environ.get('oneClick2OpenALL_SECRET', 'dwSR3bXYXcL^G!NiGV')
+# secret_key = os.environ.get('oneClick2OpenALL_SECRET', 'dwSR3bXYXcL^G!NiGV')
+# session 相关配置
 
 
 @app.get('/', response_class=HTMLResponse)
