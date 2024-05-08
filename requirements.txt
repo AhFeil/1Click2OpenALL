@@ -1,2 +1,3 @@
-flask
-gunicorn
+# flask
+# gunicorn
+fastapi[all]

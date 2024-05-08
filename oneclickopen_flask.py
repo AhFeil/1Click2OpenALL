@@ -1,12 +1,7 @@
 import os
 import re
 
-from typing import Annotated
-
-import uvicorn
-from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse, PlainTextResponse
-from fastapi.templating import Jinja2Templates
+from flask import Flask, send_from_directory, render_template, request, session
 
 # 自定义跟踪代码
 track_js_codes_file = "templates/track.txt"
@@ -23,13 +18,11 @@ def extract_urls_from_md(text):
     urls = re.findall(md_url_pattern, text)  # 在文本中查找所有匹配的网址
     return urls
 
-def extract_urls_by_pattern(input_string):
-    # 用正则根据模式提取网址
+def extract_urls(input_string):
+    # 提取网址
     url_pattern = r'https?://[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*(?:/[^\s]+)?'
     urls = re.findall(url_pattern, input_string)
     return urls
-
-extract_funcs = [extract_urls_from_md, extract_urls_by_pattern]
 
 def is_valid_url(input_string):
     pass
@@ -39,16 +32,14 @@ def is_chinese_char(char):
     return '\u4e00' <= char <= '\u9fff'
 
 
-app = FastAPI()
-templates = Jinja2Templates(directory='templates')
+app = Flask(__name__)
 
 # 设置应用的密钥，用于会话数据加密，复杂随机即可，实际生产环境需要从外面引入
-# app.secret_key = os.environ.get('oneClick2OpenALL_SECRET', 'dwSR3bXYXcL^G!NiGV')
+app.secret_key = os.environ.get('oneClick2OpenALL_SECRET', 'dwSR3bXYXcL^G!NiGV')
 
 
-@app.get('/', response_class=HTMLResponse)
-async def index(request: Request):
-    """首页"""
+@app.route('/')
+def index():
     # 获取浏览器的语言偏好
     user_language = request.headers.get('Accept-Language', 'en').split(',')[0]
     # 简单判断是否以中文开头，决定显示的文本
@@ -57,31 +48,24 @@ async def index(request: Request):
     else:
         message = "IF First use, then click me to Acquire Pop Up"
     # 获取会话中的网址列表
-    # websites = session.get('websites', [])
-    context = {"websites": [], "message_of_pop_up": message, "track_js_codes": track_js_codes}
-    return templates.TemplateResponse(request=request, name="index.html", context=context)
+    websites = session.get('websites', [])
+    return render_template('index.html', websites=websites, message_of_pop_up=message, track_js_codes=track_js_codes)
 
 
-@app.get('/acquire_pop_up', response_class=HTMLResponse)
-async def acquire_pop_up(request: Request):
+@app.route('/acquire_pop_up')
+def acquire_pop_up():
     """获取弹窗权限"""
-    return templates.TemplateResponse(request=request, name='acquire_pop_up.html')
+    return render_template('acquire_pop_up.html', track_js_codes=track_js_codes)
 
 
-@app.post('/open_websites', response_class=HTMLResponse)
-async def open_websites(request: Request):
-    """返回打开网页的 js 代码"""
-    forms = await request.form()
-    try:
-        content = forms['websites']  # 获取表单中的文本
-    except ValueError:
-        content = ""
-        return {"state": False}
-
+@app.route('/open_websites', methods=['POST'])
+def open_websites():
+    content = request.form.get('websites')  # 获取表单中的文本
     str_list = content.split('\n')  # 将多行文本拆分为列表
-    str_list = (stripped for line in str_list if (stripped := line.strip()))  # 去除空行
+    str_list = [stripped  for line in str_list if (stripped := line.strip())]  # 去除空行
     
     link_list = []   # 存放真正的网址
+    extract_funcs = [extract_urls_from_md, extract_urls]
     # 提取网址
     for one_line in str_list:
         for extract_func in extract_funcs:
@@ -101,25 +85,18 @@ async def open_websites(request: Request):
     #     is_valid_url(link)
 
     # 更新会话中的网址列表
-    # session['websites'] = link_list
+    session['websites'] = link_list
 
-    return templates.TemplateResponse(request=request, name='open_websites.html', context={"websites": link_list})
+    return render_template('open_websites.html', websites=link_list)
 
 
-from enum import Enum
-
-class Additional_Page(Enum):
-    robots = "robots.txt"
-    sitemap = "sitemap.xml"
-
-@app.get("/{file}", response_class=PlainTextResponse)
-async def static_from_root(file: Additional_Page):
-    with open(os.path.join("templates", file.value), 'r', encoding="utf-8") as f:
-        content = f.read()
-    return content
+@app.route('/robots.txt')
+@app.route('/sitemap.xml')
+def static_from_root():
+    return send_from_directory("./templates", request.path[1:])
 
 
 
 if __name__ == '__main__':
-    uvicorn.run(app, host='0.0.0.0', port=7500)
+    app.run(host='0.0.0.0', port=7500)
 
