@@ -4,32 +4,23 @@
 
 体验网址： http://oneclickopen.vfly2.com/
 
-![](https://ib.ahfei.blog:443/imagesbed/1Click2OpenALL-show-how-24-03-27.webp)
+![](https://ib.ahfei.blog:443/imagesbed/1Click2OpenALL-show-24-05-07.webp)
 
 测试通过的浏览器：
 - Windows： Edge、Chrome、Firefox、Vivaldi
 - Android： Samsung Browser、
 
 
-
-## 管理员
-
-> 原本使用 flask 框架，目前改用 fastAPI，并使用 htmx 实现动态加载。
-
-可以定义跟踪代码，只需将代码放入 `templates/track.txt`，这里的代码将会插入到网页的 head 内。
-
-安装步骤： [一键全开 1Click2OpenALL 的安装步骤 - 技焉洲 (vfly2.com)](https://technique.vfly2.com/2024/03/deployment-process-1click2openall/)
-
-
 ## 使用
 
-> **第一次使用**，点击“获取弹窗权限”的那个链接，然后允许弹窗
+> *第一次使用*，点击“获取弹窗权限”的那个链接，然后允许弹窗
 
-把含有网址的内容粘贴进文本框，然后点 Open Websites 即可。
+把含有网址的内容**粘贴**进文本框，然后点 **Open Websites** 即可。
+
+除了打开网址，它还会把这次打开的网址都显示在页面下方。
 
 
 ### 它是怎么提取出网址的
-
 
 0. 每次检测一行，忽略空行。以下面的顺序进行匹配：
 1. 一行含有网址的 md 格式文本，会提取其中所有网址
@@ -77,3 +68,13 @@ baidu.com
 
 - Rime输入法词库扩充：https://zhuanlan.zhihu.com/p/471412208
 ```
+
+
+
+## 管理员
+
+> 原本使用 flask 框架，目前改用 fastAPI，并使用 htmx 实现动态加载。
+
+可以定义跟踪代码，只需将代码放入 `templates/track.txt`，这里的代码将会插入到网页的 head 内。
+
+安装步骤： [批量打开网址 1Click2OpenALL 的安装步骤 - 技焉洲 (yanh.tech)](https://yanh.tech/2024/03/deployment-process-1click2openall/)
