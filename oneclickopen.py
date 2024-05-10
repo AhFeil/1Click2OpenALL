@@ -104,7 +104,7 @@ async def open_websites(request: Request):
     # 更新会话中的网址列表
     # session['websites'] = link_list
 
-    return templates.TemplateResponse(request=request, name='open_websites.html', context={"websites": link_list})
+    return templates.TemplateResponse(request=request, name='open_websites.js', context={"websites": link_list})
 
 
 from enum import Enum
