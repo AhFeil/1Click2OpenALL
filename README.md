@@ -14,13 +14,7 @@
 
 ## 管理员
 
-> 原本使用 flask 框架，目前改用 fastAPI。
-
-可以自定义加密 session 的密钥，通过添加环境变量实现
-
-```sh
-export 1Click2OpenALL_SECRET="your_secrec_key"
-```
+> 原本使用 flask 框架，目前改用 fastAPI，并使用 htmx 实现动态加载。
 
 可以定义跟踪代码，只需将代码放入 `templates/track.txt`，这里的代码将会插入到网页的 head 内。
 

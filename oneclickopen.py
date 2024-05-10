@@ -42,10 +42,6 @@ def is_chinese_char(char):
 app = FastAPI()
 templates = Jinja2Templates(directory='templates')
 
-# 设置应用的密钥，用于会话数据加密，复杂随机即可，实际生产环境需要从外面引入
-# secret_key = os.environ.get('oneClick2OpenALL_SECRET', 'dwSR3bXYXcL^G!NiGV')
-# session 相关配置
-
 
 @app.get('/', response_class=HTMLResponse)
 async def index(request: Request):
@@ -59,7 +55,7 @@ async def index(request: Request):
         message = "IF First use, then click me to Acquire Pop Up"
     # 获取会话中的网址列表
     # websites = session.get('websites', [])
-    context = {"websites": [], "message_of_pop_up": message, "track_js_codes": track_js_codes}
+    context = {"message_of_pop_up": message, "track_js_codes": track_js_codes}
     return templates.TemplateResponse(request=request, name="index.html", context=context)
 
 
@@ -103,10 +99,7 @@ async def open_websites(request: Request):
     # for link in link_list:
     #     is_valid_url(link)
 
-    # 更新会话中的网址列表
-    # session['websites'] = link_list
-
-    return templates.TemplateResponse(request=request, name='open_websites.js', context={"websites": link_list})
+    return templates.TemplateResponse(request=request, name='open_websites.html', context={"websites": link_list})
 
 
 from enum import Enum

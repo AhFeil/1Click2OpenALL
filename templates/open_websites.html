@@ -1,3 +1,15 @@
+<!-- 显示上一次输入的网址 -->
+{% if websites %}
+<div class="container">
+    <h2>Last Entered Websites:</h2>
+    <ul>
+        {% for website in websites %}
+        <li>{{ website }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
 <script type="text/javascript">
     function openWebsites() {
         var websites = {{ websites|tojson }};

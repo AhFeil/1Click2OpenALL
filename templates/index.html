@@ -36,6 +36,7 @@
         <h1>Welcome to Use 1Click2OpenALL!</h1>
         <p class="subtitle">by AhFei</p>
         <p class="subtitle">GitHub: <a href="https://github.com/ahfeil/1Click2OpenALL">https://github.com/ahfeil/1Click2OpenALL</a></p>
+        <p class="subtitle">自建: <a href="https://goto.vfly2.com/1c2o">一键打开全部网址，开源小工具，支持 Docker 安装</a></p>
         <div class="divider"></div>
 
         <a href="/acquire_pop_up">{{ message_of_pop_up }}</a>
@@ -45,18 +46,6 @@
             <button type="submit">Open Websites</button>
         </form>
     </div>
-
-    <!-- 显示上一次输入的网址 -->
-    {% if websites %}
-    <div class="container">
-        <h2>Last Entered Websites:</h2>
-        <ul>
-            {% for website in websites %}
-            <li>{{ website }}</li>
-            {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
 
     <div id="open_websites_js"></div>
 </body>
