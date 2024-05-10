@@ -20,6 +20,16 @@
         }
     </style>
     <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+    <script type="text/javascript">
+        function checkForm() {
+            var textarea = document.getElementById('websites');
+            if (textarea.value.trim() === "") {
+                // 如果文本框为空，则不提交表单
+                return false;
+            }
+            return true;
+        }
+    </script>
 </head>
 <body>
     <div class="container">
@@ -30,7 +40,7 @@
 
         <a href="/acquire_pop_up">{{ message_of_pop_up }}</a>
         <p>Enter the websites you want to open:</p>
-        <form id="websiteForm" hx-post="/open_websites" hx-target="#open_websites_js" hx-swap="innerHTML">
+        <form id="websiteForm" hx-post="/open_websites" hx-target="#open_websites_js" hx-swap="innerHTML" hx-trigger="submit[checkForm()]">
             <textarea id="websites" name="websites" rows="15" cols="70" placeholder="在此输入网址，每行一个"></textarea> <br><br>
             <button type="submit">Open Websites</button>
         </form>

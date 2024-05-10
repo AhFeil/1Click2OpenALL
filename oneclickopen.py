@@ -75,6 +75,8 @@ async def open_websites(request: Request):
     forms = await request.form()
     try:
         content = forms['websites']  # 获取表单中的文本
+        if not content:
+            return 
     except ValueError:
         content = ""
         return {"state": False}
