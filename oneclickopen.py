@@ -1,8 +1,6 @@
 import os
 import re
 
-from typing import Annotated
-
 import uvicorn
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, PlainTextResponse
@@ -35,8 +33,14 @@ def is_valid_url(input_string):
     pass
 
 def is_chinese_char(char):
-    # 汉字的Unicode范围
+    # 汉字的 Unicode 范围
     return '\u4e00' <= char <= '\u9fff'
+
+def not_a_url(input_string):
+    # 由汉字开头的都不要
+    if is_chinese_char(input_string[0]):
+        return True
+    return False
 
 
 app = FastAPI()
@@ -81,6 +85,7 @@ async def open_websites(request: Request):
     str_list = (stripped for line in str_list if (stripped := line.strip()))  # 去除空行
     
     link_list = []   # 存放真正的网址
+    lines_without_url = []   # 那些没有从中获得网址的一行
     # 提取网址
     for one_line in str_list:
         for extract_func in extract_funcs:
@@ -92,14 +97,14 @@ async def open_websites(request: Request):
                 break
         else:
             # 如果不是由 break 打断退出，说明上面都没匹配，此时认为一行就是一个纯网址
-            if not is_chinese_char(one_line[0]):
-                # 汉字的都不要
+            # 如果可以肯定不是合法网址，那就保存一下
+            if not_a_url(one_line):
+                lines_without_url.append(one_line)
+            else:
                 link_list.append("http://" + one_line)
 
-    # for link in link_list:
-    #     is_valid_url(link)
-
-    return templates.TemplateResponse(request=request, name='open_websites.html', context={"websites": link_list})
+    return templates.TemplateResponse(request=request, name='open_websites.html',
+                                      context={"websites": link_list, "lines_without_url": lines_without_url})
 
 
 from enum import Enum
@@ -115,7 +120,5 @@ async def static_from_root(file: Additional_Page):
     return content
 
 
-
 if __name__ == '__main__':
     uvicorn.run(app, host='0.0.0.0', port=7500)
-

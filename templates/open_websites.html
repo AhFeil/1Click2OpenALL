@@ -7,6 +7,13 @@
         <li>{{ website }}</li>
         {% endfor %}
     </ul>
+    <br/>
+    <h2>The lines that do not contain a URL:</h2>
+    <ul>
+        {% for line in lines_without_url %}
+        <li>{{ line }}</li>
+        {% endfor %}
+    </ul>
 </div>
 {% endif %}
 

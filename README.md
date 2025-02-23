@@ -33,12 +33,12 @@
 
 ```
 一行是一个纯网址的如下：
-baidu.com
+yanh.tech
 blog.vfly2.com
 https://blog.vfly2.com/
 
 md 格式含有网址的如下：
-[承飞之咎 - Explore, Make Friends and Live Independently (vfly2.com)](https://blog.vfly2.com/) 和 [技焉洲 - Linux，单片机，编程 (vfly2.com)](https://technique.vfly2.com/)
+[技焉洲 - Linux，单片机，编程](https://yanh.tech/) 和 [承飞之咎 - Explore, Make Friends and Live Independently (vfly2.com)](https://blog.vfly2.com/)
 ```
 
 
@@ -46,22 +46,22 @@ md 格式含有网址的如下：
 
 ```
 - Rime输入法词库扩充：https://zhuanlan.zhihu.com/p/471412208
-https://blog.vfly2.com/  一些文字，如果文字不是网址一部分，请用空格分开
+https://yanh.tech/  一些文字，如果文字不是网址一部分，请用空格分开
 
 
 这种中间无空格的，会把后面的文字也当作网址一部分，因为存在这种网址
-https://blog.vfly2.com/一些文字
+https://yanh.tech/一些文字
 ```
 
 
 不同行可以是不同格式的，但是同一行按照匹配顺序依次检测后，检测到第一个就会返回网址，即便还有符合其他剩余模式的
 
 ```
-https://blog.vfly2.com/
+https://yanh.tech/
 
-baidu.com
+yanh.tech
 
-[提供 AhFei 的 自建服务 - Emby, Bitwarden, and more - 承飞之咎 (vfly2.com)](https://blog.vfly2.com/2024/01/provide-ahfeis-self-hosted-services-emby-bitwarden-and-more/)
+[信息源转 RSS 框架 - source2RSS 的安装步骤 - 技焉洲](https://yanh.tech/2024/07/deployment-process-for-source2rss/)
 
 以下是我在寻找 vscode 文章时发现的： 
 上面这种原本应该匹配的一行一个网址，但是中文域名太少用，而且中间夹杂一段无网址的文本也很常见，于是抛弃中文域名以避免这种情况
