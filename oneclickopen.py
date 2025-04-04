@@ -103,8 +103,11 @@ async def open_websites(request: Request):
             else:
                 link_list.append("http://" + one_line)
 
+    user_lang = request.headers.get('Accept-Language', 'en').split(',')[0]
+    valid_title = "上次输入里有效的网址：" if user_lang.startswith('zh') else "Last entered websites:"
+    invalid_title = "不包含网址的行：" if user_lang.startswith('zh') else "The lines that do not contain any URL:"
     return templates.TemplateResponse(request=request, name='open_websites.html',
-                                      context={"websites": link_list, "lines_without_url": lines_without_url})
+            context={"websites": link_list, "lines_without_url": lines_without_url, "valid_title": valid_title, "invalid_title": invalid_title})
 
 
 from enum import Enum

@@ -1,19 +1,21 @@
 <!-- 显示上一次输入的网址 -->
 {% if websites %}
 <div class="container">
-    <h2>Last Entered Websites:</h2>
+    <h2>{{ valid_title }}</h2>
     <ul>
         {% for website in websites %}
         <li>{{ website }}</li>
         {% endfor %}
     </ul>
     <br/>
-    <h2>The lines that do not contain a URL:</h2>
+    {% if lines_without_url %}
+    <h2>{{ invalid_title }}</h2>
     <ul>
         {% for line in lines_without_url %}
         <li>{{ line }}</li>
         {% endfor %}
     </ul>
+    {% endif %}
 </div>
 {% endif %}
 
