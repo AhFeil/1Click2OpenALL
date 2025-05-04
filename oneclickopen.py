@@ -29,16 +29,20 @@ def extract_urls_by_pattern(input_string):
 
 extract_funcs = [extract_urls_from_md, extract_urls_by_pattern]
 
-def is_valid_url(input_string):
-    pass
-
 def is_chinese_char(char):
     # 汉字的 Unicode 范围
     return '\u4e00' <= char <= '\u9fff'
 
-def not_a_url(input_string):
+def contains_zh_colon_in_domain(url):
+    domain = url.split("/")[0]
+    return '：' in domain
+
+def is_invalid_url(input_string):
     # 由汉字开头的都不要
     if is_chinese_char(input_string[0]):
+        return True
+    # 域名部分含有中文冒号 ：
+    if contains_zh_colon_in_domain(input_string):
         return True
     return False
 
@@ -98,7 +102,7 @@ async def open_websites(request: Request):
         else:
             # 如果不是由 break 打断退出，说明上面都没匹配，此时认为一行就是一个纯网址
             # 如果可以肯定不是合法网址，那就保存一下
-            if not_a_url(one_line):
+            if is_invalid_url(one_line):
                 lines_without_url.append(one_line)
             else:
                 link_list.append("http://" + one_line)
