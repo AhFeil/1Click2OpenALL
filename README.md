@@ -37,6 +37,9 @@ yanh.tech
 blog.vfly2.com
 https://blog.vfly2.com/
 
+支持带用户验证和端口号的网址
+http://vfly2:123456@rss.vfly2.com:7500/query_rss/BilibiliUp/?q=471703759
+
 md 格式含有网址的如下：
 [技焉洲 - Linux，单片机，编程](https://yanh.tech/) 和 [承飞之咎 - Explore, Make Friends and Live Independently (vfly2.com)](https://blog.vfly2.com/)
 ```

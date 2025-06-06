@@ -23,7 +23,7 @@ def extract_urls_from_md(text):
 
 def extract_urls_by_pattern(input_string):
     # 用正则根据模式提取网址
-    url_pattern = r'https?://[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*(?:/[^\s]+)?'
+    url_pattern = r'https?://(?:[^:@\s]+(?::[^:@\s]*)?@)?[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*(?::[0-9]+)?(?:/[^\s]*)?'
     urls = re.findall(url_pattern, input_string)
     return urls
 
