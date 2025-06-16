@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>OneClickOpen</title>
-    {{ track_js_codes | safe}}
+    {{ track_js_codes | safe }}
     <style>
         .container {
             max-width: 600px;
@@ -46,6 +46,8 @@
             <button type="submit">Open Websites</button>
         </form>
     </div>
+
+    <div class="container">{{ ad_html | safe }}</div>
 
     <div id="open_websites_js"></div>
 </body>

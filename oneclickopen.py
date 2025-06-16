@@ -8,11 +8,16 @@ from fastapi.templating import Jinja2Templates
 
 # 自定义跟踪代码
 track_js_codes_file = "templates/track.txt"
+track_js_codes = ""
 if os.path.exists(track_js_codes_file):
     with open(track_js_codes_file, 'r', encoding='utf-8') as f:
         track_js_codes = f.read()
-else:
-    track_js_codes = ""
+
+ad_file = "templates/ad.html"
+ad_html = ""
+if os.path.exists(ad_file):
+    with open(ad_file, 'r', encoding='utf-8') as f:
+        ad_html = f.read()
 
 
 def extract_urls_from_md(text):
@@ -63,7 +68,7 @@ async def index(request: Request):
         message = "IF First use, then click me to Acquire Pop Up"
     # 获取会话中的网址列表
     # websites = session.get('websites', [])
-    context = {"message_of_pop_up": message, "track_js_codes": track_js_codes}
+    context = {"message_of_pop_up": message, "ad_html": ad_html, "track_js_codes": track_js_codes}
     return templates.TemplateResponse(request=request, name="index.html", context=context)
 
 
@@ -79,10 +84,9 @@ async def open_websites(request: Request):
     forms = await request.form()
     try:
         content = forms['websites']  # 获取表单中的文本
-        if not content:
+        if not content or not isinstance(content, str):
             return 
     except ValueError:
-        content = ""
         return {"state": False}
 
     str_list = content.split('\n')  # 将多行文本拆分为列表
@@ -114,9 +118,9 @@ async def open_websites(request: Request):
             context={"websites": link_list, "lines_without_url": lines_without_url, "valid_title": valid_title, "invalid_title": invalid_title})
 
 
-from enum import Enum
+from enum import StrEnum
 
-class Additional_Page(Enum):
+class Additional_Page(StrEnum):
     robots = "robots.txt"
     sitemap = "sitemap.xml"
 
