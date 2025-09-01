@@ -2,6 +2,7 @@
 # mine
 templates/track.txt
 templates/ad.html
+oneclickopen.service
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
