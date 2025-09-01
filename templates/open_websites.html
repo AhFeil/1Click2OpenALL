@@ -1,3 +1,25 @@
+
+{% if ask_for == "open" %}
+<script type="text/javascript">
+    function openWebsites() {
+        var websites = {{ websites|tojson }};
+        for (var i = 0; i < websites.length; i++) {
+            window.open(websites[i], '_blank');
+        }
+        document.getElementById('websiteForm').reset();  // 清空表单
+    }
+    openWebsites(); // 调用函数以打开网页
+</script>
+{% elif ask_for == "get_md" %}
+<div class="container">
+    {% if file_id == 0 %}
+    <p>没有有效的 md 文件</p>
+    {% else %}
+    <a href="/download/{{ file_id }}">下载 md 文件</a>
+    {% endif %}
+</div>
+{% endif %}
+
 <!-- 显示上一次输入的网址 -->
 {% if websites %}
 <div class="container">
@@ -18,14 +40,3 @@
     {% endif %}
 </div>
 {% endif %}
-
-<script type="text/javascript">
-    function openWebsites() {
-        var websites = {{ websites|tojson }};
-        for (var i = 0; i < websites.length; i++) {
-            window.open(websites[i], '_blank');
-        }
-        document.getElementById('websiteForm').reset();  // 清空表单
-    }
-    openWebsites(); // 调用函数以打开网页
-</script>

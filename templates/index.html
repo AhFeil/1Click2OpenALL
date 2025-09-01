@@ -22,7 +22,7 @@
     <script src="https://unpkg.com/htmx.org@1.9.12"></script>
     <script type="text/javascript">
         function checkForm() {
-            var textarea = document.getElementById('websites');
+            var textarea = document.getElementById('content');
             if (textarea.value.trim() === "") {
                 // 如果文本框为空，则不提交表单
                 return false;
@@ -36,14 +36,18 @@
         <h1>Welcome to Use 1Click2OpenALL!</h1>
         <p class="subtitle">by AhFei</p>
         <p class="subtitle">GitHub: <a href="https://github.com/ahfeil/1Click2OpenALL">https://github.com/ahfeil/1Click2OpenALL</a></p>
-        <p class="subtitle">自建: <a href="https://goto.vfly2.com/1c2o">一键打开全部网址，开源小工具，支持 Docker 安装</a></p>
+        <p class="subtitle">自建: <a href="https://yanh.tech/2024/03/deployment-process-1click2openall/">一键打开全部网址，开源小工具，支持 Docker 安装</a></p>
         <div class="divider"></div>
 
         <a href="/acquire_pop_up">{{ message_of_pop_up }}</a>
         <p>Enter the websites you want to open:</p>
-        <form id="websiteForm" hx-post="/open_websites" hx-target="#open_websites_js" hx-swap="innerHTML" hx-trigger="submit[checkForm()]">
-            <textarea id="websites" name="websites" rows="15" cols="70" placeholder="在此输入网址，每行一个"></textarea> <br><br>
-            <button type="submit">Open Websites</button>
+        <form id="websiteForm" hx-post="/do_it" hx-target="#open_websites_js" hx-swap="innerHTML" hx-trigger="submit[checkForm()]">
+            <textarea id="content" name="content" rows="15" cols="70" placeholder="在此输入网址，每行一个"></textarea>
+            <input type="hidden" name="ask_for" id="ask_for" value="open" />
+            <br><br>
+            <button type="submit" onclick="document.getElementById('ask_for').value='open'">Open Websites</button>
+            <span>or</span>
+            <button type="submit" onclick="document.getElementById('ask_for').value='get_md'">Get Markdown</button>
         </form>
     </div>
 
