@@ -6,3 +6,4 @@ httpx
 beautifulsoup4
 lxml
 html-to-markdown
+briefconf

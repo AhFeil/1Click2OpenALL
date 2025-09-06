@@ -2,14 +2,16 @@ import io
 import os
 import re
 import time
-from typing import Annotated, Literal
+from typing import Annotated, Literal, Optional
 
 import uvicorn
 from fastapi import FastAPI, Request, Form, HTTPException
 from fastapi.responses import HTMLResponse, PlainTextResponse, StreamingResponse
 from fastapi.templating import Jinja2Templates
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+import httpx
 
+from config_handle import config
 from html2md import download_all, create_zip_from_markdown_data
 
 # 自定义跟踪代码
@@ -96,7 +98,7 @@ async def index(request: Request):
         message = "IF First use, then click me to Acquire Pop Up"
     # 获取会话中的网址列表
     # websites = session.get('websites', [])
-    context = {"message_of_pop_up": message, "ad_html": ad_html, "track_js_codes": track_js_codes}
+    context = {"message_of_pop_up": message, "ad_html": ad_html, "track_js_codes": track_js_codes, "cap_api_endpoint": f"{config.cap_instance_url}/{config.site_key}/"}
     return templates.TemplateResponse(request=request, name="index.html", context=context)
 
 
@@ -113,9 +115,33 @@ def cleanup_old_files(now: int):
     for fid in expired:
         del tmp_file[fid]
 
+
+async def verify_captcha(instance_url, site_key, key_secret, captcha_token) -> bool:
+    url = f"{instance_url}/{site_key}/siteverify"
+    headers = {
+        "Content-Type": "application/json"
+    }
+    data = {
+        "secret": key_secret,
+        "response": captcha_token
+    }
+
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.post(url, headers=headers, json=data)
+            response.raise_for_status()
+            return response.json().get("success")
+        except httpx.HTTPStatusError as e:
+            print(f"HTTP error occurred: {e}")
+            return False
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return False
+
 class WebsiteLines(BaseModel):
     content: str
     ask_for: Literal["open", "get_md"]
+    cap_token: Optional[str]= Field(default=None, alias='cap-token')
 
 @app.post('/do_it')
 async def do_it(request: Request, websites: Annotated[WebsiteLines, Form()]):
@@ -130,6 +156,12 @@ async def do_it(request: Request, websites: Annotated[WebsiteLines, Form()]):
                 "invalid_title": "不包含网址的行：" if user_lang.startswith('zh') else "The lines that do not contain any URL:"
             }
         case "get_md":
+            if config.cap_instance_url:
+                if not websites.cap_token:
+                    return HTMLResponse("<h3>你必须先验证才能使用</h3>")
+                result = await verify_captcha(config.cap_instance_url, config.site_key, config.key_secret, websites.cap_token)
+                if not result:
+                    return HTMLResponse("<h3>验证出错</h3>")
             if len(link_list) > 3:
                 return HTMLResponse("<script>alert('limitation: less than or equal to 3');</script>")
             res, finished_url, failed_url = await download_all(link_list)

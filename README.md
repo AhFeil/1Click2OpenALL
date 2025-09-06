@@ -85,4 +85,12 @@ yanh.tech
 
 类似的，可以在网页底部放上广告，只需要把 HTML 放入 `templates/ad.html`。
 
+支持验证码/CAPTCHA，采用基于工作量证明的开源方案：https://github.com/tiagozip/cap ，如要开启只需要保证项目根目录有一个 config.yaml 文件，其中的内容为：
+
+```yaml
+cap_instance_url: https://xx.xx
+site_key: abcdefghi
+key_secret: VS256d2578HCSsbd51afknxxxxxxxxxxxxxxxxxxxxxx
+```
+
 安装步骤： [批量打开网址 1Click2OpenALL 的安装步骤 - 技焉洲 (yanh.tech)](https://yanh.tech/2024/03/deployment-process-1click2openall/)

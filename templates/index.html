@@ -5,21 +5,25 @@
     {{ track_js_codes | safe }}
     <style>
         .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             max-width: 600px;
             margin: 0 auto;
             padding: 20px;
-            text-align: center;
         }
         .subtitle {
             text-align: center;
             font-size: 12px;
         }
         .divider {
+            width: 520px;
             border-top: 1px dashed #000;
             margin: 20px 0;
         }
     </style>
     <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+    <script src="https://unpkg.com/@cap.js/widget"></script>
     <script type="text/javascript">
         function checkForm() {
             var textarea = document.getElementById('content');
@@ -41,18 +45,29 @@
 
         <a href="/acquire_pop_up">{{ message_of_pop_up }}</a>
         <p>Enter the websites you want to open:</p>
-        <form id="websiteForm" hx-post="/do_it" hx-target="#open_websites_js" hx-swap="innerHTML" hx-trigger="submit[checkForm()]">
+        <form id="websiteForm" hx-post="/do_it" hx-target="#open_websites_js" hx-swap="innerHTML" hx-trigger="submit[checkForm()]" class="container">
             <textarea id="content" name="content" rows="15" cols="70" placeholder="在此输入网址，每行一个"></textarea>
             <input type="hidden" name="ask_for" id="ask_for" value="open" />
-            <br><br>
+            <br>
             <button type="submit" onclick="document.getElementById('ask_for').value='open'">Open Websites</button>
-            <span>or</span>
+            <p>OR</p>
+            <p>You can get markdown from websites listed upon, but verify first</p>
+            <cap-widget 
+                id="cap" 
+                data-cap-api-endpoint="{{ cap_api_endpoint }}" 
+                data-cap-i18n-initial-state="我是人类"
+                data-cap-i18n-verifying-label="正在验证..."
+                data-cap-i18n-solved-label="验证通过"
+                data-cap-i18n-error-label="错误"
+            ></cap-widget>
+            <br>
             <button type="submit" onclick="document.getElementById('ask_for').value='get_md'">Get Markdown</button>
         </form>
+
+        <div id="open_websites_js"></div>
     </div>
 
-    <div class="container">{{ ad_html | safe }}</div>
 
-    <div id="open_websites_js"></div>
+    <div class="container">{{ ad_html | safe }}</div>
 </body>
 </html>

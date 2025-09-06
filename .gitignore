@@ -3,6 +3,7 @@
 templates/track.txt
 templates/ad.html
 oneclickopen.service
+config.yaml
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
