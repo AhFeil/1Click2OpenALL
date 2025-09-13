@@ -58,22 +58,24 @@ async def download_all(urls) -> tuple[list[tuple[str, str]], list[str], list[str
         print("failed to finish url:", failed_url)
     return data, finished_url, failed_url
 
-def create_zip_from_markdown_data(data: list[tuple[str, str]]) -> io.BytesIO:
-    """
-    将 list[tuple[title, content]] 转为多个 .md 文件，并压缩为 zip 包（在内存中完成）
-    """
-    # 创建一个内存中的 zip 文件
-    zip_buffer = io.BytesIO()
-    with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_STORED) as zip_file:
-        for title, content in data:
-            # 清理文件名：移除不合法字符，避免文件系统问题
-            # safe_title = "".join(c for c in title if c.isalnum() or c in (' ', '_', '-')).rstrip()
-            # if not safe_title:
-                # safe_title = "untitled"
-            zip_file.writestr(title + ".md", content.encode('utf-8'))
+def create_zip_or_md(data: list[tuple[str, str]]) -> tuple[str, io.BytesIO]:
+    """将标题+内容这种列表转为多个 .md 文件，并压缩为 zip 包（在内存中完成）"""
+    buffer = io.BytesIO()
+    if len(data) == 1:
+        filename = data[0][0] + ".md"
+        buffer.write(data[0][1].encode('utf-8'))
+    else:
+        filename = "oneclick2getmd.zip"
+        with zipfile.ZipFile(buffer, 'w', zipfile.ZIP_STORED) as zip_file:
+            for title, content in data:
+                # 清理文件名：移除不合法字符，避免文件系统问题
+                # safe_title = "".join(c for c in title if c.isalnum() or c in (' ', '_', '-')).rstrip()
+                # if not safe_title:
+                    # safe_title = "untitled"
+                zip_file.writestr(title + ".md", content.encode('utf-8'))
 
-    zip_buffer.seek(0)
-    return zip_buffer
+    buffer.seek(0)
+    return filename, buffer
 
 async def download_and_save_all(urls, out_dir):
     out_dir = Path(out_dir)
@@ -84,8 +86,8 @@ async def download_and_save_all(urls, out_dir):
         output_file = out_dir / (title + ".md")
         output_file.write_text(markdown)
 
-
-tmp_file: dict[int, io.BytesIO] = {}
+# 索引: (文件名, 内容)
+tmp_file: dict[int, tuple[str, io.BytesIO]] = {}
 
 # 清理超过 10 分钟的临时文件
 def cleanup_old_files(now: int):
@@ -106,11 +108,11 @@ async def do_convert(lang: str, link_list: list[str], lines_without_url: list[st
 
     res, finished_url, failed_url = await download_all(link_list)
     if finished_url:
-        zip_buffer = create_zip_from_markdown_data(res)
+        filename, buffer = create_zip_or_md(res)
         file_id = int(time.time() * 1000)
         # 检查删除旧的文件
         cleanup_old_files(file_id)
-        tmp_file[file_id] = zip_buffer
+        tmp_file[file_id] = (filename, buffer)
     else:
         file_id = 0
     context = {
@@ -126,13 +128,14 @@ router = APIRouter()
 
 @router.get('/download/{id}', response_class=StreamingResponse)
 async def download(id: int):
-    zip_buffer = tmp_file.pop(id, None)
-    if not zip_buffer:
+    filename, buffer = tmp_file.pop(id, ("", None))
+    if not buffer:
         raise HTTPException(status_code=404)
+    media_type = "text/markdown" if filename.endswith(".md") else "application/zip"
     return StreamingResponse(
-        zip_buffer,
-        media_type="application/zip",
-        headers={"Content-Disposition": "attachment; filename=oneclick2getmd.zip"}
+        buffer,
+        media_type=media_type,
+        headers={"Content-Disposition": f"attachment; filename={filename}"}
     )
 
 
