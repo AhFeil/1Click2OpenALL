@@ -3,6 +3,7 @@ import io
 import zipfile
 import time
 from pathlib import Path
+from urllib.parse import quote
 
 import httpx
 from bs4 import BeautifulSoup
@@ -132,10 +133,11 @@ async def download(id: int):
     if not buffer:
         raise HTTPException(status_code=404)
     media_type = "text/markdown" if filename.endswith(".md") else "application/zip"
+    content_disposition = f"attachment; filename*=UTF-8''{quote(filename)}"
     return StreamingResponse(
         buffer,
         media_type=media_type,
-        headers={"Content-Disposition": f"attachment; filename={filename}"}
+        headers={"Content-Disposition": content_disposition}
     )
 
 
