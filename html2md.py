@@ -1,11 +1,19 @@
+import asyncio
 import io
 import zipfile
+import time
 from pathlib import Path
-import asyncio
 
 import httpx
 from bs4 import BeautifulSoup
 from html_to_markdown import convert_to_markdown
+from fastapi import HTTPException
+from fastapi.responses import HTMLResponse, StreamingResponse
+from fastapi import APIRouter
+
+from captcha import verify_captcha
+from config_handle import config
+
 
 headers = {
     'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6',
@@ -75,6 +83,58 @@ async def download_and_save_all(urls, out_dir):
     for title, markdown in res:
         output_file = out_dir / (title + ".md")
         output_file.write_text(markdown)
+
+
+tmp_file: dict[int, io.BytesIO] = {}
+
+# 清理超过 10 分钟的临时文件
+def cleanup_old_files(now: int):
+    expired = [fid for fid, _ in tmp_file.items() if now - fid > 10 * 60 * 1000]
+    for fid in expired:
+        del tmp_file[fid]
+
+
+async def do_convert(lang: str, link_list: list[str], lines_without_url: list[str], cap_token: str | None) -> dict | HTMLResponse:
+    if config.cap_instance_url:
+        if not cap_token:
+            return HTMLResponse("<h3>你必须先验证才能使用</h3>")
+        result = await verify_captcha(config.cap_instance_url, config.site_key, config.key_secret, cap_token)
+        if not result:
+            return HTMLResponse("<h3>验证出错</h3>")
+    if len(link_list) > 3:
+        return HTMLResponse("<script>alert('limitation: less than or equal to 3');</script>")
+
+    res, finished_url, failed_url = await download_all(link_list)
+    if finished_url:
+        zip_buffer = create_zip_from_markdown_data(res)
+        file_id = int(time.time() * 1000)
+        # 检查删除旧的文件
+        cleanup_old_files(file_id)
+        tmp_file[file_id] = zip_buffer
+    else:
+        file_id = 0
+    context = {
+        "websites": finished_url,
+        "lines_without_url": failed_url + lines_without_url,
+        "valid_title": "获取到 md 的网址：",
+        "invalid_title": "没有获取到 md 的网址和不包含网址的行：",
+        "file_id": file_id,
+    }
+    return context
+
+router = APIRouter()
+
+@router.get('/download/{id}', response_class=StreamingResponse)
+async def download(id: int):
+    zip_buffer = tmp_file.pop(id, None)
+    if not zip_buffer:
+        raise HTTPException(status_code=404)
+    return StreamingResponse(
+        zip_buffer,
+        media_type="application/zip",
+        headers={"Content-Disposition": "attachment; filename=oneclick2getmd.zip"}
+    )
+
 
 if __name__ == "__main__":
     import os
