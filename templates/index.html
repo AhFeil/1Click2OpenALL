@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>OneClickOpen</title>
-    {{ track_js_codes | safe }}
+    {% include "track.txt" ignore missing %}
     <style>
         .container {
             display: flex;
@@ -67,7 +67,8 @@
         <div id="open_websites_js"></div>
     </div>
 
-
-    <div class="container">{{ ad_html | safe }}</div>
+    <div class="container">
+        {% include "ad.html" ignore missing %}
+    </div>
 </body>
 </html>

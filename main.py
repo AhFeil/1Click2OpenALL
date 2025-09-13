@@ -16,21 +16,6 @@ app.include_router(router)
 
 templates = Jinja2Templates(directory='templates')
 
-# TODO jinja 直接插入
-# 自定义跟踪代码
-track_js_codes_file = "templates/track.txt"
-track_js_codes = ""
-if os.path.exists(track_js_codes_file):
-    with open(track_js_codes_file, 'r', encoding='utf-8') as f:
-        track_js_codes = f.read()
-
-ad_file = "templates/ad.html"
-ad_html = ""
-if os.path.exists(ad_file):
-    with open(ad_file, 'r', encoding='utf-8') as f:
-        ad_html = f.read()
-
-
 @app.get('/', response_class=HTMLResponse)
 async def index(request: Request):
     """首页"""
@@ -41,7 +26,7 @@ async def index(request: Request):
         message = "如果是第一次使用，点击我以授权弹窗权限"
     else:
         message = "IF First use, then click me to Acquire Pop Up"
-    context = {"message_of_pop_up": message, "ad_html": ad_html, "track_js_codes": track_js_codes, "cap_api_endpoint": f"{config.cap_instance_url}/{config.site_key}/"}
+    context = {"message_of_pop_up": message, "cap_api_endpoint": f"{config.cap_instance_url}/{config.site_key}/"}
     return templates.TemplateResponse(request=request, name="index.html", context=context)
 
 
