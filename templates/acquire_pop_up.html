@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>获取弹窗权限</title>
-    {{ track_js_codes | safe}}
-    <script type="text/javascript">
-        function openWebsites() {
-            var websites = ["https://yanh.tech/2024/03/deployment-process-1click2openall/"];
-            for (var i = 0; i < websites.length; i++) {
-                window.open(websites[i], '_blank');
+    <head>
+        <title>获取弹窗权限 | OneClickOpen</title>
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+        <script type="text/javascript">
+            function openWebsites() {
+                var website = "https://yanh.tech/2024/03/deployment-process-1click2openall/";
+                window.open(website, '_blank');
+                setTimeout(function() {
+                    window.location.href = "/";
+                }, 30000); // 30秒后跳转
             }
+        </script>
+    </head>
 
-            setTimeout(function(){
-                window.location.href = "/"; // 跳转回主页
-            }, 10000); // 10秒后跳转
-        }
-    </script>
-</head>
-<h1>Welcome to Use 1Click2OpenALL!</h1>
-<p>授权后，超过一定时间会跳转到作者的网站，可以主动后退到首页以避免</p>
-<body onload="openWebsites()"></body>
+    <body onload="openWebsites()">
+        <main class="container">
+            <h1>获取弹窗权限</h1>
+            <p>请根据浏览器提示，允许本网站的弹窗权限</p>
+            <p>由于技术限制，如果要获取弹窗权限，就必须先打开一个网页，由用户手动允许。这里打开的网页是作者的博客<a href="https://yanh.tech/">技焉洲</a>。</p>
+        </main>
+    </body>
 </html>

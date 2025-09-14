@@ -3,23 +3,13 @@
 <head>
     <title>OneClickOpen</title>
     {% include "track.txt" ignore missing %}
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
     <style>
         .container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            max-width: 600px;
-            margin: 0 auto;
             padding: 20px;
-        }
-        .subtitle {
-            text-align: center;
-            font-size: 12px;
-        }
-        .divider {
-            width: 520px;
-            border-top: 1px dashed #000;
-            margin: 20px 0;
         }
     </style>
     <script src="https://unpkg.com/htmx.org@1.9.12"></script>
@@ -36,22 +26,21 @@
     </script>
 </head>
 <body>
-    <div class="container">
+    <header>
         <h1>Welcome to Use 1Click2OpenALL!</h1>
-        <p class="subtitle">by AhFei</p>
-        <p class="subtitle">GitHub: <a href="https://github.com/ahfeil/1Click2OpenALL">https://github.com/ahfeil/1Click2OpenALL</a></p>
-        <p class="subtitle">自建: <a href="https://yanh.tech/2024/03/deployment-process-1click2openall/">一键打开全部网址，开源小工具，支持 Docker 安装</a></p>
-        <div class="divider"></div>
+        <p style="font-size: 14px">by AhFei</p>
+        <p style="font-size: 14px">GitHub: <a href="https://github.com/ahfeil/1Click2OpenALL">https://github.com/ahfeil/1Click2OpenALL</a></p>
+        <p style="font-size: 14px">自建: <a href="https://yanh.tech/2024/03/deployment-process-1click2openall/">一键打开全部网址，开源小工具，支持 Docker 安装</a></p>
+    </header>
 
+    <main class="container">
         <a href="/acquire_pop_up">{{ message_of_pop_up }}</a>
-        <p>Enter the websites you want to open:</p>
         <form id="websiteForm" hx-post="/do_it" hx-target="#open_websites_js" hx-swap="innerHTML" hx-trigger="submit[checkForm()]" class="container">
-            <textarea id="content" name="content" rows="15" cols="70" placeholder="在此输入网址，每行一个"></textarea>
+            <textarea id="content" name="content" rows="15" cols="70" placeholder="在此输入网址，每行一个
+Enter the URL here, one per line"></textarea>
             <input type="hidden" name="ask_for" id="ask_for" value="open" />
-            <br>
-            <button type="submit" onclick="document.getElementById('ask_for').value='open'">Open Websites</button>
-            <p>OR</p>
-            <p>You can get markdown from websites listed upon, but verify first</p>
+            <button type="submit" onclick="document.getElementById('ask_for').value='open'" style="margin-block: 1rem 0">Open Websites</button>
+            <p>Or, you can get Markdown from the URL above, but verify first</p>
             <cap-widget 
                 id="cap" 
                 data-cap-api-endpoint="{{ cap_api_endpoint }}" 
@@ -60,15 +49,14 @@
                 data-cap-i18n-solved-label="验证通过"
                 data-cap-i18n-error-label="错误"
             ></cap-widget>
-            <br>
-            <button type="submit" onclick="document.getElementById('ask_for').value='get_md'">Get Markdown</button>
+            <button type="submit" onclick="document.getElementById('ask_for').value='get_md'" style="margin-block: 1rem 0">Get Markdown</button>
         </form>
 
         <div id="open_websites_js"></div>
-    </div>
+    </main>
 
-    <div class="container">
+    <footer>
         {% include "ad.html" ignore missing %}
-    </div>
+    </footer>
 </body>
 </html>
