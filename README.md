@@ -75,7 +75,7 @@ yanh.tech
 
 ## 使用网页转 Markdown
 
-点击 `get markdown`，返回一个下载地址，对应一个 zip 压缩包，里面是 md 文件，对应每个网址。
+点击 `get markdown`，返回一个下载地址，对应一个 zip 压缩包，里面是 md 文件，对应每个网址。如果只有一个网址，则直接返回 md 文件而不是压缩包。
 
 服务器会依次访问文本框中的网址，并将获取到的网页内容转换为 markdown 格式的文本，如果访问的网页对爬虫有限制，就会获取失败。
 
@@ -84,5 +84,13 @@ yanh.tech
 可以定义跟踪代码，只需将代码放入 `templates/track.txt`，这里的代码将会插入到网页的 head 内。
 
 类似的，可以在网页底部放上广告，只需要把 HTML 放入 `templates/ad.html`。
+
+支持验证码/CAPTCHA，采用基于工作量证明的开源方案：https://github.com/tiagozip/cap ，如要开启只需要保证项目根目录有一个 config.yaml 文件，其中的内容为：
+
+```yaml
+cap_instance_url: https://xx.xx
+site_key: abcdefghi
+key_secret: VS256d2578HCSsbd51afknxxxxxxxxxxxxxxxxxxxxxx
+```
 
 安装步骤： [批量打开网址 1Click2OpenALL 的安装步骤 - 技焉洲 (yanh.tech)](https://yanh.tech/2024/03/deployment-process-1click2openall/)
