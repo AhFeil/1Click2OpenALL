@@ -1,6 +1,6 @@
-import os
 from enum import StrEnum
 from typing import Annotated, Literal, Optional
+from pathlib import Path
 
 from fastapi import FastAPI, Request, Form, HTTPException
 from fastapi.templating import Jinja2Templates
@@ -56,15 +56,18 @@ async def do_it(request: Request, websites: Annotated[WebsiteLines, Form()]):
     return templates.TemplateResponse(request=request, name='open_websites.html', context=context | {"ask_for": websites.ask_for})
 
 
-class Additional_Page(StrEnum):
+class AdditionalPage(StrEnum):
     robots = "robots.txt"
     sitemap = "sitemap.xml"
 
+additional_pages = {
+    item.value: Path(f"templates/{item.value}").read_text(encoding="utf-8")
+    for item in AdditionalPage
+}
+
 @app.get("/{file}", response_class=PlainTextResponse)
-async def static_from_root(file: Additional_Page):
-    with open(os.path.join("templates", file.value), 'r', encoding="utf-8") as f:
-        content = f.read()
-    return content
+async def static_from_root(file: AdditionalPage):
+    return additional_pages[file.value]
 
 
 if __name__ == '__main__':
