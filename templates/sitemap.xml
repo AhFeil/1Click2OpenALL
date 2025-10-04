@@ -2,8 +2,14 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
    <url>
       <loc>https://oneclickopen.vfly2.com/</loc>
-      <lastmod>2025-04-04</lastmod>
+      <lastmod>2025-10-04</lastmod>
       <changefreq>yearly</changefreq>
       <priority>0.8</priority>
+   </url>
+   <url>
+      <loc>https://oneclickopen.vfly2.com//hanota/3/</loc>
+      <lastmod>2025-10-04</lastmod>
+      <changefreq>yearly</changefreq>
+      <priority>0.3</priority>
    </url>
 </urlset>

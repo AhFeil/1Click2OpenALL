@@ -7,12 +7,14 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, PlainTextResponse
 from pydantic import BaseModel, Field
 
+import hanota
+import html2md
 from config_handle import config
-from html2md import do_convert, router
 from oneclickopen import extract_urls, do_open
 
 app = FastAPI()
-app.include_router(router)
+app.include_router(html2md.router)
+app.include_router(hanota.router)
 
 templates = Jinja2Templates(directory='templates')
 
@@ -48,7 +50,7 @@ async def do_it(request: Request, websites: Annotated[WebsiteLines, Form()]):
         case "open":
             context = do_open(lang, link_list, lines_without_url)
         case "get_md":
-            context = await do_convert(lang, link_list, lines_without_url, websites.cap_token)
+            context = await html2md.do_convert(lang, link_list, lines_without_url, websites.cap_token)
             if isinstance(context, HTMLResponse):
                 return context
         case _:

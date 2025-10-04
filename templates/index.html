@@ -1,9 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>OneClickOpen</title>
-    {% include "track.txt" ignore missing %}
-    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+{% extends "base.html" %}
+
+{% block head_extend %}
     <style>
         .container {
             display: flex;
@@ -12,7 +9,6 @@
             padding: 20px;
         }
     </style>
-    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
     <script src="https://unpkg.com/@cap.js/widget"></script>
     <script type="text/javascript">
         function checkForm() {
@@ -24,39 +20,27 @@
             return true;
         }
     </script>
-</head>
-<body>
-    <header>
-        <h1>Welcome to Use 1Click2OpenALL!</h1>
-        <p style="font-size: 14px">by AhFei</p>
-        <p style="font-size: 14px">GitHub: <a href="https://github.com/ahfeil/1Click2OpenALL">https://github.com/ahfeil/1Click2OpenALL</a></p>
-        <p style="font-size: 14px">自建: <a href="https://yanh.tech/2024/03/deployment-process-1click2openall/">一键打开全部网址，开源小工具，支持 Docker 安装</a></p>
-    </header>
+{% endblock head_extend %}
 
-    <main class="container">
-        <a href="/acquire_pop_up">{{ message_of_pop_up }}</a>
-        <form id="websiteForm" hx-post="/do_it" hx-target="#open_websites_js" hx-swap="innerHTML" hx-trigger="submit[checkForm()]" class="container">
-            <textarea id="content" name="content" rows="15" cols="70" placeholder="在此输入网址，每行一个
+
+{% block content %}
+    <a href="/acquire_pop_up">{{ message_of_pop_up }}</a>
+    <form id="websiteForm" hx-post="/do_it" hx-target="#open_websites_js" hx-swap="innerHTML" hx-trigger="submit[checkForm()]" class="container">
+        <textarea id="content" name="content" rows="15" cols="70" placeholder="在此输入网址，每行一个
 Enter the URL here, one per line"></textarea>
-            <input type="hidden" name="ask_for" id="ask_for" value="open" />
-            <button type="submit" onclick="document.getElementById('ask_for').value='open'" style="margin-block: 1rem 0">Open Websites</button>
-            <p>Or, you can get Markdown from the URL above, but verify first</p>
-            <cap-widget 
-                id="cap" 
-                data-cap-api-endpoint="{{ cap_api_endpoint }}" 
-                data-cap-i18n-initial-state="我是人类"
-                data-cap-i18n-verifying-label="正在验证..."
-                data-cap-i18n-solved-label="验证通过"
-                data-cap-i18n-error-label="错误"
-            ></cap-widget>
-            <button type="submit" onclick="document.getElementById('ask_for').value='get_md'" style="margin-block: 1rem 0">Get Markdown</button>
-        </form>
+        <input type="hidden" name="ask_for" id="ask_for" value="open" />
+        <button type="submit" onclick="document.getElementById('ask_for').value='open'" style="margin-block: 1rem 0">Open Websites</button>
+        <p>Or, you can get Markdown from the URL above, but verify first</p>
+        <cap-widget 
+            id="cap" 
+            data-cap-api-endpoint="{{ cap_api_endpoint }}" 
+            data-cap-i18n-initial-state="我是人类"
+            data-cap-i18n-verifying-label="正在验证..."
+            data-cap-i18n-solved-label="验证通过"
+            data-cap-i18n-error-label="错误"
+        ></cap-widget>
+        <button type="submit" onclick="document.getElementById('ask_for').value='get_md'" style="margin-block: 1rem 0">Get Markdown</button>
+    </form>
 
-        <div id="open_websites_js"></div>
-    </main>
-
-    <footer>
-        {% include "ad.html" ignore missing %}
-    </footer>
-</body>
-</html>
+    <div id="open_websites_js"></div>
+{% endblock content %}

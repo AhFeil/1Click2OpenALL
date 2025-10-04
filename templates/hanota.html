@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% if error_msg %}
+        <p>{{ error_msg }}</p>
+    {% else %}
+        <pre>{{ hanota_result }}</pre>
+    {% endif %}
+{% endblock content %}

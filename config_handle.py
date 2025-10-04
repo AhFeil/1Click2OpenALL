@@ -13,6 +13,7 @@ class Config(BriefConfig):
     cap_instance_url: str | None
     site_key: str | None
     key_secret: str | None
+    max_hanota: int
 
     @classmethod
     def load(cls, config_path: str) -> Self:
@@ -20,12 +21,13 @@ class Config(BriefConfig):
             configs = cls._load_config(config_path)
         except FileNotFoundError as e:
             print(e)
-            return cls(None, None, None)
+            configs = {}
 
         return cls(
             cap_instance_url=configs.get("cap_instance_url"),
             site_key=configs.get("site_key"),
             key_secret=configs.get("key_secret"),
+            max_hanota=configs.get("max_hanota", 10),
         )
 
 
