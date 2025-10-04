@@ -1,5 +1,43 @@
 {% extends "base.html" %}
 
+{% block head_seo %}
+    <title>一键全开 - 批量打开文本中的网址（免费在线开源）</title>
+    <meta name="description" content="把含有网址的内容粘贴进文本框，点 Open Websites 即可自动提取并批量在新标签页中打开所有网址。无需安装插件，完全免费并开源，支持任何浏览器。">
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+                {
+                    "@type": "Question",
+                    "name": "这个工具可以批量打开多少个链接？",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "理论上没有限制，但浏览器可能会拦截过多弹窗。建议每次打开不超过20-30个链接以获得最佳体验。"
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "这个工具是怎么提取链接的？",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "每次检测一行，忽略空行。以下面的顺序进行匹配：含有 Markdown 格式网址、匹配 http://xx.xx/xxx 这种格式、一行视作一个纯网址。"
+                    }
+                }
+            ]
+        }
+    </script>
+    <!-- Open Graph -->
+    <meta property="og:title" content="一键全开 - 批量打开文本中的网址（开源）" />
+    <meta property="og:description" content="高效批量打开多个网页，提升工作效率！" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://oneclickopen.vfly2.com/" />
+    <meta property="og:image" content="https://ib.ahfei.blog/imagesbed/oneclickall-homepage-25-10-21.png" />
+    <meta property="og:image:alt" content="一键全开 - 批量打开文本中的网址" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+{% endblock head_seo %}
+
 {% block head_extend %}
     <style>
         .container {

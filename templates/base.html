@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>OneClickOpen</title>
+    {% block head_seo %}
+        <title>一键全开 - 批量打开文本中的网址（免费在线开源）</title>
+    {% endblock head_seo %}
     {% include "track.txt" ignore missing %}
     <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
     <script src="https://unpkg.com/htmx.org@1.9.12"></script>
