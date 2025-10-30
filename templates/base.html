@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% block head_seo %}
+        <title>一键全开 - 批量打开文本中的网址（免费在线开源）</title>
+    {% endblock head_seo %}
+    {% include "track.txt" ignore missing %}
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+    {% block head_extend %}{% endblock head_extend %}
+</head>
+<body>
+    <header>
+        <h1>Welcome to Use 1Click2OpenALL!<span style="font-size: 14px; font-weight: normal; padding-left: 1ch;">by AhFei</span></h1>
+        <p style="font-size: 14px">自建: <a href="https://yanh.tech/2024/03/deployment-process-1click2openall/">一键打开全部网址，开源小工具，支持 Docker 安装</a></p>
+        <nav>
+            <a href="/" {% if request.url.path == '/' %}aria-current="page"{% endif %}>首页</a>
+            <a href="/hanota/3/">汉诺塔</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        {% block content %}{% endblock content %}
+    </main>
+
+    <footer>
+        {% include "ad.html" ignore missing %}
+    </footer>
+</body>
+</html>

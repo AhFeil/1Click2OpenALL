@@ -59,7 +59,7 @@ def do_open(lang: str, link_list: list[str], lines_without_url: list[str]) -> di
     context = {
         "websites": link_list,
         "lines_without_url": lines_without_url,
-        "valid_title": "上次输入里有效的网址：" if lang.startswith('zh') else "Last entered websites:",
+        "valid_title": f"上次输入里有效的网址，共 {len(link_list)} 个：" if lang.startswith('zh') else "Last entered websites:",
         "invalid_title": "不包含网址的行：" if lang.startswith('zh') else "The lines that do not contain any URL:"
     }
     return context
