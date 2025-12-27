@@ -21,6 +21,11 @@ templates = Jinja2Templates(directory='templates')
 @app.get('/', response_class=HTMLResponse)
 async def index(request: Request):
     """首页"""
+    client_ip = request.headers.get("x-real-ip")
+    # 如果 X-Real-IP 不存在，回退到直接连接的客户端地址
+    if not client_ip:
+        client_ip = request.client.host if request.client else "unknown"
+
     # 获取浏览器的语言偏好
     user_language = request.headers.get('Accept-Language', 'en').split(',')[0]
     # 简单判断是否以中文开头，决定显示的文本
@@ -28,7 +33,7 @@ async def index(request: Request):
         message = "如果是第一次使用，点击我以授权弹窗权限"
     else:
         message = "IF First use, then click me to Acquire Pop Up"
-    context = {"message_of_pop_up": message, "cap_api_endpoint": f"{config.cap_instance_url}/{config.site_key}/"}
+    context = {"message_of_pop_up": message, "cap_api_endpoint": f"{config.cap_instance_url}/{config.site_key}/", "client_ip": client_ip}
     return templates.TemplateResponse(request=request, name="index.html", context=context)
 
 
