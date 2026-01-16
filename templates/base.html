@@ -15,6 +15,7 @@
         <p style="font-size: 14px">自建: <a href="https://yanh.tech/2024/03/deployment-process-1click2openall/">一键打开全部网址，开源小工具，支持 Docker 安装</a></p>
         <nav>
             <a href="/" {% if request.url.path == '/' %}aria-current="page"{% endif %}>首页</a>
+            <a href="/word2anki/" {% if request.url.path == '/word2anki/' %}aria-current="page"{% endif %}>Anki 卡片</a>
             <a href="/hanota/3/">汉诺塔</a>
         </nav>
     </header>

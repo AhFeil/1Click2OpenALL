@@ -1,5 +1,10 @@
 import io
 import time
+from urllib.parse import quote
+
+from fastapi import HTTPException
+from fastapi.responses import StreamingResponse
+from fastapi import APIRouter
 
 
 # 时间戳: (文件名，内容)
@@ -21,3 +26,19 @@ def store_item(name: str, item: io.BytesIO) -> int:
 
 def pop_item(file_id: int) -> tuple[str, io.BytesIO | None]:
     return tmp_file.pop(file_id, ("", None))
+
+
+router = APIRouter()
+
+@router.get('/download/{file_id}', response_class=StreamingResponse)
+async def download(file_id: int):
+    filename, buffer = pop_item(file_id)
+    if not buffer:
+        raise HTTPException(status_code=404)
+    media_type = "text/markdown" if filename.endswith(".md") else "application/zip"
+    content_disposition = f"attachment; filename*=UTF-8''{quote(filename)}"
+    return StreamingResponse(
+        buffer,
+        media_type=media_type,
+        headers={"Content-Disposition": content_disposition}
+    )

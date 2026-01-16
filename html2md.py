@@ -2,18 +2,15 @@ import asyncio
 import io
 import zipfile
 from pathlib import Path
-from urllib.parse import quote
 
 import httpx
 from bs4 import BeautifulSoup
 from html_to_markdown import convert_to_markdown
-from fastapi import HTTPException
-from fastapi.responses import HTMLResponse, StreamingResponse
-from fastapi import APIRouter
+from fastapi.responses import HTMLResponse
 
 from captcha import verify_captcha
 from config_handle import config
-from memory_store import cleanup_old_files, store_item, pop_item
+from memory_store import cleanup_old_files, store_item
 
 
 headers = {
@@ -112,21 +109,6 @@ async def do_convert(lang: str, link_list: list[str], lines_without_url: list[st
         "file_id": file_id,
     }
     return context
-
-router = APIRouter()
-
-@router.get('/download/{file_id}', response_class=StreamingResponse)
-async def download(file_id: int):
-    filename, buffer = pop_item(file_id)
-    if not buffer:
-        raise HTTPException(status_code=404)
-    media_type = "text/markdown" if filename.endswith(".md") else "application/zip"
-    content_disposition = f"attachment; filename*=UTF-8''{quote(filename)}"
-    return StreamingResponse(
-        buffer,
-        media_type=media_type,
-        headers={"Content-Disposition": content_disposition}
-    )
 
 
 if __name__ == "__main__":

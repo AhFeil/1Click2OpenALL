@@ -1,4 +1,5 @@
 import re
+from typing import Iterable
 
 
 def extract_urls_from_md(text):
@@ -32,13 +33,14 @@ def is_invalid_url(input_string):
         return True
     return False
 
-def extract_urls(content: str) -> tuple[list[str], list[str]]:
-    str_list = filter(None, map(str.strip, content.split('\n')))  # 将多行文本拆分为列表并去除空行
+def extract_lines(content: str) -> Iterable[str]:
+    return filter(None, map(str.strip, content.split('\n')))  # 将多行文本拆分为列表并去除空行
 
+def extract_urls(content: str) -> tuple[list[str], list[str]]:
     link_list = []   # 存放真正的网址
     lines_without_url = []   # 那些没有从中获得网址的一行
     # 提取网址
-    for one_line in str_list:
+    for one_line in extract_lines(content):
         for extract_func in extract_funcs:
             # 按顺序，用不同模式寻找网址
             url_list = extract_func(one_line)
