@@ -24,12 +24,21 @@ def contains_zh_colon_in_domain(url):
     domain = url.split("/")[0]
     return '：' in domain
 
-def is_invalid_url(input_string):
+def is_invalid_url(input_string: str):
+    if not input_string:
+        return True
     # 由汉字开头的都不要
     if is_chinese_char(input_string[0]):
         return True
     # 域名部分含有中文冒号 ：
     if contains_zh_colon_in_domain(input_string):
+        return True
+    # 必须含有一个 . 且这个 . 不能是第一个元素也不能是最后一个
+    if "." not in input_string:
+        return True
+    if input_string[0] == ".":
+        return True
+    if input_string[-1] == ".":
         return True
     return False
 
