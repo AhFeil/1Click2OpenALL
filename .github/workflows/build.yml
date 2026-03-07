@@ -26,5 +26,5 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ toLower(github.repository_owner) }}/1click2openall:${{ github.ref_name }}
-            ghcr.io/${{ toLower(github.repository_owner) }}/1click2openall:latest
+            ghcr.io/ahfeil/1click2openall:${{ github.ref_name }}
+            ghcr.io/ahfeil/1click2openall:latest
