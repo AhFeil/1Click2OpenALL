@@ -4,7 +4,7 @@ from pathlib import Path
 
 from fastapi import FastAPI, Request, Form, HTTPException
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse, PlainTextResponse
+from fastapi.responses import FileResponse, HTMLResponse, PlainTextResponse
 from pydantic import BaseModel, Field
 
 import hanota
@@ -69,6 +69,9 @@ async def do_it(request: Request, websites: Annotated[WebsiteLines, Form()]):
             raise HTTPException(status_code=404)
     return templates.TemplateResponse(request=request, name='open_websites.html', context=context | {"ask_for": websites.ask_for})
 
+@app.get("/favicon.ico")
+async def favicon():
+    return FileResponse(path="templates/favicon.ico", filename="favicon.ico")
 
 class AdditionalPage(StrEnum):
     robots = "robots.txt"
