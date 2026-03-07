@@ -4,17 +4,20 @@ from pathlib import Path
 
 from fastapi import FastAPI, Request, Form, HTTPException
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse, PlainTextResponse
+from fastapi.responses import FileResponse, HTMLResponse, PlainTextResponse
 from pydantic import BaseModel, Field
 
 import hanota
+import memory_store
 import html2md
+import word2anki
 from config_handle import config
-from oneclickopen import extract_urls, do_open
+from oneclickopen import extract_urls, extract_lines, do_open
 
 app = FastAPI()
-app.include_router(html2md.router)
+app.include_router(memory_store.router)
 app.include_router(hanota.router)
+app.include_router(word2anki.router)
 
 templates = Jinja2Templates(directory='templates')
 
@@ -44,7 +47,7 @@ async def acquire_pop_up(request: Request):
 
 class WebsiteLines(BaseModel):
     content: str
-    ask_for: Literal["open", "get_md"]
+    ask_for: Literal["open", "get_md", "make_card"]
     cap_token: Optional[str]= Field(default=None, alias='cap-token')
 
 @app.post('/do_it')
@@ -58,10 +61,17 @@ async def do_it(request: Request, websites: Annotated[WebsiteLines, Form()]):
             context = await html2md.do_convert(lang, link_list, lines_without_url, websites.cap_token)
             if isinstance(context, HTMLResponse):
                 return context
+        case "make_card":
+            context = await word2anki.do_convert(lang, list(extract_lines(websites.content)), websites.cap_token)
+            if isinstance(context, HTMLResponse):
+                return context
         case _:
             raise HTTPException(status_code=404)
     return templates.TemplateResponse(request=request, name='open_websites.html', context=context | {"ask_for": websites.ask_for})
 
+@app.get("/favicon.ico")
+async def favicon():
+    return FileResponse(path="templates/favicon.ico", filename="favicon.ico")
 
 class AdditionalPage(StrEnum):
     robots = "robots.txt"

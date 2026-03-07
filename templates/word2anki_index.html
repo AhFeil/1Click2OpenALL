@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block head_seo %}
+    <title>一键全开 - 获取单词的 Anki 卡片（免费在线开源）</title>
+    <meta name="description" content="每行一个单词，点 Get Card 即可制作单词的 Anki 卡片。无需安装插件，完全免费并开源，支持任何浏览器。">
+    <!-- Open Graph -->
+    <meta property="og:title" content="一键全开 - 批量打开文本中的网址（开源）" />
+    <meta property="og:description" content="高效批量打开多个网页，提升工作效率！" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://oneclickopen.vfly2.com/" />
+    <meta property="og:image" content="https://ib.ahfei.blog/imagesbed/oneclickall-homepage-25-10-21.png" />
+    <meta property="og:image:alt" content="一键全开 - 批量打开文本中的网址" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+{% endblock head_seo %}
+
+{% block head_extend %}
+    <style>
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+    </style>
+    <script src="https://unpkg.com/@cap.js/widget"></script>
+    <script type="text/javascript">
+        function checkForm() {
+            var textarea = document.getElementById('content');
+            if (textarea.value.trim() === "") {
+                // 如果文本框为空，则不提交表单
+                return false;
+            }
+            return true;
+        }
+    </script>
+{% endblock head_extend %}
+
+
+{% block content %}
+    <form id="websiteForm" hx-post="/do_it" hx-target="#word2anki_res" hx-swap="innerHTML" hx-trigger="submit[checkForm()]" class="container">
+        <textarea id="content" name="content" rows="15" cols="70" placeholder="在此输入单词，每行一个
+Enter the Word here, one per line" style="margin-block: 0 1rem"></textarea>
+        <input type="hidden" name="ask_for" id="ask_for" value="open" />
+        <cap-widget 
+            id="cap" 
+            data-cap-api-endpoint="{{ cap_api_endpoint }}" 
+            data-cap-i18n-initial-state="我是人类"
+            data-cap-i18n-verifying-label="正在验证..."
+            data-cap-i18n-solved-label="验证通过"
+            data-cap-i18n-error-label="错误"
+        ></cap-widget>
+        <button type="submit" onclick="document.getElementById('ask_for').value='make_card'" style="margin-block: 1rem 0">Get Card</button>
+    </form>
+
+    <div id="word2anki_res"></div>
+{% endblock content %}
