@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block head_seo %}
+    <title>一键全开 - 批量提取文本中的邮箱（免费在线开源）</title>
+    <meta name="description" content="把含有邮箱的内容粘贴进文本框，点 Extract 即可批量提取其中的邮箱地址或邮箱域名，并自动去重。无需安装插件，完全免费并开源，支持任何浏览器。">
+    <!-- Open Graph -->
+    <meta property="og:title" content="一键全开 - 批量提取文本中的邮箱（开源）" />
+    <meta property="og:description" content="批量提取文本中的邮箱地址或域名，自动去重！" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://oneclickopen.vfly2.com/email/" />
+    <meta property="og:image" content="https://ib.ahfei.blog/imagesbed/oneclickall-homepage-25-10-21.png" />
+    <meta property="og:image:alt" content="一键全开 - 批量提取文本中的邮箱" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+{% endblock head_seo %}
+
+{% block head_extend %}
+    <style>
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        .mode-choice {
+            display: flex;
+            gap: 2ch;
+            margin-block: 1rem 0;
+        }
+        .result ul {
+            columns: 2;
+        }
+    </style>
+{% endblock head_extend %}
+
+
+{% block content %}
+    <form method="post" action="/email/" class="container">
+        <textarea id="content" name="content" rows="15" cols="70" placeholder="在此输入文本，每行可以有多个邮箱
+Enter the text here, multiple emails per line
+
+- 开头的一行（如 - a@x.com 或 - x.com）视为已有数据，可用于和新数据合并去重
+A line starting with - is treated as existing data, for merging and deduping">{{ content }}</textarea>
+        <label for="exclude" style="margin-block: 1rem 0">排除以下内容 Exclude these（每行一个域名或邮箱）</label>
+        <textarea id="exclude" name="exclude" rows="5" cols="70" placeholder="每行一个域名或邮箱
+One domain or email per line">{{ exclude }}</textarea>
+        <div class="mode-choice">
+            <label><input type="radio" name="mode" value="email" {% if mode != 'domain' %}checked{% endif %}> 提取邮箱 Emails</label>
+            <label><input type="radio" name="mode" value="domain" {% if mode == 'domain' %}checked{% endif %}> 提取域名 Domains</label>
+        </div>
+        <button type="submit" style="margin-block: 1rem 0">Extract</button>
+    </form>
+
+    {% if result is not none %}
+    <div class="container result">
+        {% if result %}
+            <p>共提取到 {{ result|length }} 个{{ "域名" if mode == "domain" else "邮箱" }}：</p>
+            <ul>
+                {% for item in result %}
+                <li>{{ item }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>没有提取到{{ "域名" if mode == "domain" else "邮箱" }}</p>
+        {% endif %}
+    </div>
+    {% endif %}
+{% endblock content %}

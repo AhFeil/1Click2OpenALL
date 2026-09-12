@@ -13,6 +13,7 @@ import html2md
 import word2anki
 from config_handle import config
 from oneclickopen import extract_urls, extract_lines, do_open
+from email_extract import extract_emails, extract_email_domains
 
 app = FastAPI()
 app.include_router(memory_store.router)
@@ -44,6 +45,27 @@ async def index(request: Request):
 async def acquire_pop_up(request: Request):
     """获取弹窗权限"""
     return templates.TemplateResponse(request=request, name='acquire_pop_up.html')
+
+@app.get('/email/', response_class=HTMLResponse)
+async def email_page(request: Request):
+    """提取邮箱页面"""
+    return templates.TemplateResponse(request=request, name='email_extract.html')
+
+class EmailLines(BaseModel):
+    content: str
+    mode: Literal["email", "domain"] = "email"
+    exclude: str = ""
+
+@app.post('/email/', response_class=HTMLResponse)
+async def email_extract(request: Request, form: Annotated[EmailLines, Form()]):
+    """提取邮箱或邮箱域名"""
+    if form.mode == "domain":
+        result = extract_email_domains(form.content, form.exclude)
+    else:
+        result = extract_emails(form.content, form.exclude)
+    context = {"result": result, "mode": form.mode, "content": form.content, "exclude": form.exclude}
+    return templates.TemplateResponse(request=request, name='email_extract.html', context=context)
+
 
 class WebsiteLines(BaseModel):
     content: str
